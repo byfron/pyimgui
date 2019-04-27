@@ -237,13 +237,23 @@ cdef extern from "imgui.h":
             float rounding,            # = 0.0f
             int rounding_corners_flags # = ImDrawCornerFlags_All
         ) except +  # ✓
-         
+
+        void AddCircleFilled(
+            const ImVec2& a, 
+			float radius,
+            ImU32 col,
+        ) except +  # ✓         
+		
+        void PathLineTo(const ImVec2& pos) except +
+
+        void PathStroke(ImU32 color, 
+		                bool closed, 
+                        float thikness
+        ) except +
 
         void ChannelsSplit(int channels_count) except + # ✓
         void ChannelsMerge() except + # ✓
         void ChannelsSetCurrent(int idx) except + # ✓
-
-
 
     ctypedef struct ImDrawData:  # ✓
         bool            Valid  # ✓
@@ -1129,9 +1139,9 @@ cdef extern from "imgui.h" namespace "ImGui":
     ImVec2 CalcTextSize(  # ✗
             const char* text,
             # note: optional
-            const char* text_end,
-            bool hide_text_after_double_hash,
-            float wrap_width
+            #const char* text_end,
+            #bool hide_text_after_double_hash,
+            #float wrap_width
     ) except +
     void CalcListClipping(int items_count, float items_height, int* out_items_display_start, int* out_items_display_end) except +  # ✗
 

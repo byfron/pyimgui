@@ -27,8 +27,8 @@ clean:
 
 .PHONY: build
 build: bootstrap
-	_CYTHONIZE_WITH_COVERAGE=1 python -m pip install -e . -v
-	python ci/completion.py -o README.md with-pxd imgui/cimgui.pxd
+	_CYTHONIZE_WITH_COVERAGE=1 python3 -m pip install -e . -v
+	python3 ci/completion.py -o README.md with-pxd imgui/cimgui.pxd
 
 
 .PHONY: rebuild
@@ -50,12 +50,12 @@ coverage: build
 
 .PHONY: completion
 completion:
-	_CYTHONIZE_WITH_COVERAGE=1 python -m pip install -e . -v
-	@python ci/completion.py missing `find build/ -name imgui.o -print -quit` `find build/ -name core.o -print -quit`
-	@python ci/completion.py with-nm `find build/ -name imgui.o -print -quit` `find build/ -name core.o -print -quit`
+	_CYTHONIZE_WITH_COVERAGE=1 python3 -m pip install -e . -v
+	@python3 ci/completion.py missing `find build/ -name imgui.o -print -quit` `find build/ -name core.o -print -quit`
+	@python3 ci/completion.py with-nm `find build/ -name imgui.o -print -quit` `find build/ -name core.o -print -quit`
 
 .PHONY: ditribute
 distribute: clean
-	pip install -U Cython setuptools twine
-	python setup.py build
-	python setup.py sdist
+	python3 -m pip install -U Cython setuptools twine
+	python3 setup.py build
+	python3 setup.py sdist

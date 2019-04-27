@@ -429,6 +429,44 @@ cdef class _DrawList(object):
             rounding_corners_flags,
         )
 
+    def add_circle_filled(
+            self,
+			float center_x,
+			float center_y,
+			float radius,
+            cimgui.ImU32 col
+        ):
+        """Add a filled circle to the draw list.
+        Args:
+            center_x (float): X coordinate of the center
+            center_y (float): Y coordinate of the center
+			radius (float): radius of the circle
+            col (ImU32): RGBA color specification
+
+        .. wraps::
+            void ImDrawList::AddCircleFilled(
+                const ImVec2&,
+				float,
+                ImU32,
+            )
+        """
+        #_DrawList.from_ptr(self._ptr).AddCircleFilled(
+        self._ptr.AddCircleFilled(
+            _cast_args_ImVec2(center_x, center_y),
+			radius,
+            col,
+        )
+
+    def path_stroke(
+            self,
+            cimgui.ImU32 col,
+            bool closed,
+            float thickness = 1.0
+        ):
+        self._ptr.PathStroke(col, closed, thickness)
+
+    def path_line_to(self, float x, float y):
+        self._ptr.PathLineTo(_cast_args_ImVec2(x, y))
 
     def add_line(
             self,
@@ -1999,7 +2037,7 @@ def get_window_draw_list():
         sz = 20
 
         draw_list = imgui.get_window_draw_list()
-
+		
         for i in range(0, imgui.COLOR_COUNT):
             name = imgui.get_style_color_name(i);
             draw_list.add_rect_filled(pos_x, pos_y, pos_x+sz, pos_y+sz, imgui.get_color_u32_idx(i));
@@ -5941,6 +5979,14 @@ cpdef get_color_u32(cimgui.ImU32 col):
     return cimgui.GetColorU32(col)
 
 
+cpdef get_id(str name):
+    return cimgui.GetID(_bytes(name))
+
+cpdef push_id(int id):
+    cimgui.PushID(id)
+
+cpdef pop_id():
+    cimgui.PopID()
 
 cpdef push_item_width(float item_width):
     """Push item width in the stack.
@@ -5997,6 +6043,9 @@ cpdef pop_item_width():
     """
     cimgui.PopItemWidth()
 
+
+cpdef calc_text_size(str text):
+    return _cast_ImVec2_tuple(cimgui.CalcTextSize(_bytes(text)))
 
 cpdef calculate_item_width():
     """Calculate and return the current item width.
